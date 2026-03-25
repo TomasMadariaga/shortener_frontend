@@ -33,7 +33,7 @@ export const Footer = () => {
           </h3>
 
           {/* Íconos sociales */}
-          <div className="flex gap-6">
+          {/* <div className="flex gap-6">
             {socialLinks.map((social) => {
               const Icon = social.icon;
               return (
@@ -49,7 +49,7 @@ export const Footer = () => {
                 </a>
               );
             })}
-          </div>
+          </div> */}
 
           {/* Copyright */}
           <p className="text-text text-xs">
