@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "https://shorter-production-130a.up.railway.app/",
-  withCredentials: true,
+  // baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: "http://localhost:3000",
+  withCredentials: true
 });
 
 export default instance;

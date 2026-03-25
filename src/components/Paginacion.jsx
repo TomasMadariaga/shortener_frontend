@@ -33,7 +33,7 @@ export const Paginacion = ({ pagina, setPagina, maximo }) => {
     setInput(e.target.value);
   };
   return (
-    <div className="flex items-center justify-center h-fit gap-2">
+    <div className="flex items-center justify-center my-4 h-fit gap-2">
       <button
         disabled={pagina === 1 || pagina < 1}
         onClick={prevPage}

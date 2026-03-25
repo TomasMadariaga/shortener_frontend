@@ -9,63 +9,120 @@ export const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { signup, isAuthenticated } = useAuth();
+  const { signup, isAuthenticated, errors: registerErrors } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) navigate("/shorter");
-  }, []);
+  }, [isAuthenticated, navigate]);
 
   const onSubmit = handleSubmit(async (values) => {
     signup(values);
   });
 
+  useEffect(() => {
+    document.title = "Register";
+  }, []);
+
   return (
-    <div className="flex h-[calc(100vh-100px)] items-center justify-center bg-gray-700">
-      <div className="bg-zinc-800 max-w-md p-10 rounded-md">
-        <h1 className="text-2xl font-bold text-white">Register</h1>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            {...register("username", { required: true })}
-            className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-            placeholder="Username"
-          />
-          {errors.username && (
-            <p className="text-red-500">Username is required</p>
+    <div className="flex-grow flex items-center justify-center px-4 py-12 bg-bg">
+      <div className="max-w-md w-full">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-text-h">Create an account</h1>
+          <p className="text-text mt-2">Get started with URL shortener</p>
+        </div>
+
+        {/* Card */}
+        <div className="bg-card/30 border border-border rounded-xl p-6 sm:p-8 backdrop-blur-sm">
+          {/* Errores generales */}
+          {registerErrors && registerErrors.length > 0 && (
+            <div className="mb-6 space-y-2">
+              {registerErrors.map((error, i) => (
+                <div
+                  key={i}
+                  className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg text-sm text-center"
+                >
+                  {error}
+                </div>
+              ))}
+            </div>
           )}
-          <input
-            type="email"
-            {...register("email", { required: true })}
-            className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-            placeholder="Email"
-          />
-          {errors.email && <p className="text-red-500">Email is required</p>}
-          <input
-            type="password"
-            {...register("password", { required: true })}
-            className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-            placeholder="Password"
-          />
-          {errors.password && (
-            <p className="text-red-500">Password is required</p>
-          )}
-          <button
-            className="bg-sky-500 text-white px-4 py-2 rounded-md my-2"
-            type="submit"
-          >
-            Register
-          </button>
-        </form>
-        <p className="flex gap-x-2 justify-between text-white">
-          Already have an account?{" "}
-          <Link
-            to="/"
-            className="text-white hover:text-sky-500 hover:underline hover:underline-offset-4"
-          >
-            Login
-          </Link>
-        </p>
+
+          {/* Formulario */}
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="username" className="block text-text text-sm mb-2">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                {...register("username", { required: "Username is required" })}
+                className={`w-full px-4 py-2.5 rounded-lg border bg-transparent text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all ${
+                  errors.username ? "border-red-500" : "border-border"
+                }`}
+                placeholder="johndoe"
+              />
+              {errors.username && (
+                <p className="text-red-400 text-sm mt-1">{errors.username.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="email" className="block text-text text-sm mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                {...register("email", { required: "Email is required" })}
+                className={`w-full px-4 py-2.5 rounded-lg border bg-transparent text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all ${
+                  errors.email ? "border-red-500" : "border-border"
+                }`}
+                placeholder="your@email.com"
+              />
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-text text-sm mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                {...register("password", { required: "Password is required" })}
+                className={`w-full px-4 py-2.5 rounded-lg border bg-transparent text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all ${
+                  errors.password ? "border-red-500" : "border-border"
+                }`}
+                placeholder="••••••••"
+              />
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 bg-gradient-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+            >
+              Create account
+            </button>
+          </form>
+
+          {/* Link a login */}
+          <div className="mt-6 text-center">
+            <p className="text-text text-sm">
+              Already have an account?{" "}
+              <Link to="/login" className="text-accent hover:underline transition">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

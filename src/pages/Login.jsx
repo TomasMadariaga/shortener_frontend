@@ -18,51 +18,100 @@ export const Login = () => {
 
   useEffect(() => {
     if (isAuthenticated) navigate("/shorter");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated]);
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
   return (
-    <div className="flex h-[calc(100vh-100px)] items-center justify-center bg-gray-700">
-      <div className="bg-zinc-700 max-w-md w-full p-10 rounded-md border">
-        {loginErrors.map((error, i) => (
-          <div key={i} className="bg-red-500 p-2 text-white text-center my-2">
-            {error}
-          </div>
-        ))}
-        <h1 className="text-2xl font-bold text-white">Sign In</h1>
-        <form onSubmit={onSubmit}>
-          <input
-            type="email"
-            {...register("email", { required: true })}
-            className="w-full bg-zinc-600 text-white px-4 py-2 rounded-md my-2"
-            placeholder="Email"
-          />
-          {errors.email && <p className="text-red-500">Email is required</p>}
-          <input
-            type="password"
-            {...register("password", { required: true })}
-            className="w-full bg-zinc-600 text-white px-4 py-2 rounded-md my-2"
-            placeholder="Password"
-          />
-          {errors.password && (
-            <p className="text-red-500">Password is required</p>
+    <div className="flex-grow flex items-center justify-center px-4 py-12 bg-bg">
+      <div className="max-w-md w-full">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-text-h">Welcome back</h1>
+          <p className="text-text mt-2">Sign in to your account</p>
+        </div>
+
+        {/* Card */}
+        <div className="bg-card/30 border border-border rounded-xl p-6 sm:p-8 backdrop-blur-sm">
+          {/* Errores */}
+          {loginErrors.length > 0 && (
+            <div className="mb-6 space-y-2">
+              {loginErrors.map((error, i) => (
+                <div
+                  key={i}
+                  className="bg-red-500/10 border border-red-500/30 text-red-400 p-3 rounded-lg text-sm text-center"
+                >
+                  {error}
+                </div>
+              ))}
+            </div>
           )}
-          <button
-            className="bg-sky-500 text-white px-4 py-2 rounded-md my-2"
-            type="submit"
-          >
-            Login
-          </button>
-        </form>
-        <p className="flex gap-x-2 justify-between text-white">
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
-          Don't have an account?{" "}
-          <Link
-            to="/register"
-            className="text-white hover:text-sky-500 hover:underline hover:underline-offset-4"
-          >
-            Sign up
-          </Link>
-        </p>
+
+          {/* Formulario */}
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-text text-sm mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                {...register("email", { required: "Email is required" })}
+                className={`w-full px-4 py-2.5 rounded-lg border bg-transparent text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all ${
+                  errors.email
+                    ? "border-red-500"
+                    : "border-border"
+                }`}
+                placeholder="your@email.com"
+              />
+              {errors.email && (
+                <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-text text-sm mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                {...register("password", { required: "Password is required" })}
+                className={`w-full px-4 py-2.5 rounded-lg border bg-transparent text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all ${
+                  errors.password
+                    ? "border-red-500"
+                    : "border-border"
+                }`}
+                placeholder="••••••••"
+              />
+              {errors.password && (
+                <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2.5 bg-gradient-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+            >
+              Sign In
+            </button>
+          </form>
+
+          {/* Link a registro */}
+          <div className="mt-6 text-center">
+            <p className="text-text text-sm">
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-accent hover:underline transition"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

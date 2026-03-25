@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth";
-import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
 
@@ -20,8 +19,9 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (user) => {
     try {
-      const res = await registerRequest(user);
-      setUser(res.data);
+      const { data } = await registerRequest(user);
+      localStorage.setItem("token", data.token);
+      setUser({ id: data.id, username: data.username, email: data.email });
       setIsAuthenticated(true);
     } catch (error) {
       setErrors(error.response.data);
@@ -30,19 +30,22 @@ export const AuthProvider = ({ children }) => {
 
   const signin = async (user) => {
     try {
-      const res = await loginRequest(user);
+      const { data } = await loginRequest(user);
+      localStorage.setItem("token", data.token);
       setIsAuthenticated(true);
-      setUser(res.data);
+      setUser({ id: data.id, username: data.username, email: data.email });
     } catch (error) {
-      if (Array.isArray(error.response.data)) {
-        return setErrors(error.response.data);
-      }
+      console.log(error)
+      // if (Array.isArray(error.response.data)) {
+      //   return setErrors(error.response.data);
+      // }
       setErrors([error.response.data.message]);
     }
   };
 
   const logout = async () => {
-    Cookies.remove("token");
+    localStorage.removeItem("token");
+    // Cookies.remove("token", {domain: '.railway.app'});
     setIsAuthenticated(false);
     setUser(null);
   };
@@ -56,33 +59,34 @@ export const AuthProvider = ({ children }) => {
     }
   }, [errors]);
 
-  useEffect(() => {
-    async function checkLogin() {
-      const cookies = Cookies.get();
-      console.log(cookies)
+  async function checkLogin() {
+    const token = localStorage.getItem("token");
 
-      if (!cookies.token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return setUser(null);
-      }
-
-      try {
-        const res = await verifyTokenRequest(cookies.token);
-        if (!res.data) {
-          setIsAuthenticated(false);
-          setLoading(false);
-          return;
-        }
-        setIsAuthenticated(true);
-        setUser(res.data);
-        setLoading(false);
-      } catch (error) {
-        setIsAuthenticated(false);
-        setUser(null);
-        setLoading(false);
-      }
+    if (!token) {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return setUser(null);
     }
+
+    try {
+      const token = localStorage.getItem("token");
+      const { data } = await verifyTokenRequest(token);
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+      setUser({ id: data.id, username: data.username, email: data.email });
+      setIsAuthenticated(true);
+      setLoading(false);
+    } catch (error) {
+      setIsAuthenticated(false);
+      setUser(null);
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
     checkLogin();
   }, []);
   return (
