@@ -105,7 +105,7 @@ export const Dashboard = () => {
               (pagina - 1) * porPagina + porPagina,
             )
             .map((link, index) => (
-              <UrlCard link={link} key={index} urls={urls} setUrls={setUrls}/>
+              <UrlCard link={link} key={index} urls={urls} setUrls={setUrls} index={index}/>
             ))}
         </div>
 
