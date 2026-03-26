@@ -25,17 +25,14 @@ export const Login = () => {
   }, []);
 
   return (
-    <div className="flex-grow flex items-center justify-center px-4 py-12 bg-bg">
+    <div className="grow flex items-center justify-center px-4 py-12 bg-bg">
       <div className="max-w-md w-full">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-text-h">Welcome back</h1>
           <p className="text-text mt-2">Sign in to your account</p>
         </div>
 
-        {/* Card */}
         <div className="bg-card/30 border border-border rounded-xl p-6 sm:p-8 backdrop-blur-sm">
-          {/* Errores */}
           {loginErrors.length > 0 && (
             <div className="mb-6 space-y-2">
               {loginErrors.map((error, i) => (
@@ -49,7 +46,6 @@ export const Login = () => {
             </div>
           )}
 
-          {/* Formulario */}
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-text text-sm mb-2">
@@ -93,13 +89,12 @@ export const Login = () => {
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-gradient-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-2.5 bg-linear-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
             >
               Sign In
             </button>
           </form>
 
-          {/* Link a registro */}
           <div className="mt-6 text-center">
             <p className="text-text text-sm">
               Don't have an account?{" "}

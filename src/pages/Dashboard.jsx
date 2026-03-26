@@ -3,39 +3,47 @@ import { useUrl } from "../context/UrlContext";
 import { Link } from "react-router-dom";
 import { Paginacion } from "../components/Paginacion";
 import { useAuth } from "../context/AuthContext";
-import { toast } from "react-toastify";
-import { formatUrl } from "../utils/formatUrl";
-import { getClientUrl } from "../utils/clientUrl";
+import { UrlCard } from "../components/UrlCard";
 
 export const Dashboard = () => {
   const [urls, setUrls] = useState([]);
   const [pagina, setPagina] = useState(1);
   const [porPagina, setPorPagina] = useState(6);
+  const [loading, setLoading] = useState(true);
+
   const { user } = useAuth();
-  const { get, deleteLink } = useUrl();
+  const { get } = useUrl();
 
   const maximo = Math.ceil(urls.length / porPagina);
-  const clientUrl = getClientUrl();
 
   useEffect(() => {
-    const getUrls = async () => {
+  const getUrls = async () => {
+    setLoading(true);
+    try {
       const data = await get(user.id);
       setUrls(data);
-    };
-    getUrls();
-  }, []);
+    } finally {
+      setLoading(false);
+    }
+  };
+  getUrls();
+}, [user?.id, get]);
 
   useEffect(() => {
     document.title = "Dashboard";
   }, []);
 
-  const handleDelete = async (id, url) => {
-    if (confirm(`Delete "${url}"?`)) {
-      await deleteLink(id);
-      setUrls(urls.filter((link) => link.id !== id));
-      toast.success("URL deleted successfully");
-    }
-  };
+
+  if (loading) {
+  return (
+    <div className="grow flex items-center justify-center bg-bg">
+      <div className="text-center">
+        <div className="spinner mx-auto mb-4"></div>
+        <p className="text-text">Loading your links...</p>
+      </div>
+    </div>
+  );
+}
 
   if (urls.length === 0) {
     return (
@@ -83,7 +91,6 @@ export const Dashboard = () => {
   return (
     <div className="grow bg-bg py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-text-h">My URLs</h1>
           <p className="text-text mt-1">
@@ -91,7 +98,6 @@ export const Dashboard = () => {
           </p>
         </div>
 
-        {/* Grid de URLs */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {urls
             .slice(
@@ -99,115 +105,13 @@ export const Dashboard = () => {
               (pagina - 1) * porPagina + porPagina,
             )
             .map((link, index) => (
-              <div
-                key={link.id}
-                className="group border border-border rounded-xl p-5 bg-card/30 hover:border-accent/50 transition-all duration-200"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs font-mono text-accent bg-accent-bg px-2 py-0.5 rounded-full">
-                        #{index + 1}
-                      </span>
-                      <span className="text-xs text-text/50">
-                        {new Date(link.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="mb-3">
-                      <p className="text-text-h text-sm font-medium mb-1">
-                        Original URL
-                      </p>
-                      <a
-                        href={formatUrl(link.url)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-text hover:text-accent text-sm break-all transition-colors block"
-                      >
-                        {link.url}
-                      </a>
-                    </div>
-                    <div className="mb-3">
-                      <p className="text-text-h text-sm font-medium mb-1">
-                        Short URL
-                      </p>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <Link
-                          to={`/${link.shortUrl}`}
-                          target="_blank"
-                          className="text-accent hover:underline text-sm break-all"
-                        >
-                          {`${clientUrl}/${link.shortUrl}`}
-                        </Link>
-                        <button
-                          onClick={() => {
-                            navigator.clipboard.writeText(
-                              `${clientUrl}/${link.shortUrl}`,
-                            );
-                            toast.success("Copied!");
-                          }}
-                          className="text-text/40 hover:text-accent transition"
-                          title="Copy to clipboard"
-                        >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col items-end gap-3">
-                    <div className="text-center bg-accent-bg rounded-lg px-3 py-1.5">
-                      <p className="text-accent font-bold text-xl">
-                        {link.clicks}
-                      </p>
-                      <p className="text-text text-xs">clicks</p>
-                    </div>
-                    <button
-                      onClick={() => handleDelete(link.id, link.url)}
-                      className="p-2 text-text/40 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition"
-                      title="Delete"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                    <Link
-                      to={`/dashboard/links/${link.shortUrl}`}
-                      className="text-accent hover:underline text-sm"
-                    >
-                      View details
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              <UrlCard link={link} key={index} urls={urls} setUrls={setUrls}/>
             ))}
         </div>
 
-        {/* Paginación */}
         {maximo > 1 && (
           <div className="mt-8">
-            <Paginacion pagina={pagina} setPagina={setPagina} maximo={maximo} />
+            <Paginacion pagina={pagina} setPagina={setPagina} maximo={maximo}/>
           </div>
         )}
       </div>

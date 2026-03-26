@@ -35,17 +35,15 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       setUser({ id: data.id, username: data.username, email: data.email });
     } catch (error) {
-      console.log(error)
-      // if (Array.isArray(error.response.data)) {
-      //   return setErrors(error.response.data);
-      // }
+      if (Array.isArray(error.response.data)) {
+        return setErrors(error.response.data);
+      }
       setErrors([error.response.data.message]);
     }
   };
 
   const logout = async () => {
     localStorage.removeItem("token");
-    // Cookies.remove("token", {domain: '.railway.app'});
     setIsAuthenticated(false);
     setUser(null);
   };
@@ -64,24 +62,19 @@ export const AuthProvider = ({ children }) => {
 
     if (!token) {
       setIsAuthenticated(false);
+      setUser(null);
       setLoading(false);
-      return setUser(null);
+      return;
     }
 
     try {
-      const token = localStorage.getItem("token");
       const { data } = await verifyTokenRequest(token);
-      if (!token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
       setUser({ id: data.id, username: data.username, email: data.email });
       setIsAuthenticated(true);
-      setLoading(false);
     } catch (error) {
       setIsAuthenticated(false);
       setUser(null);
+    } finally {
       setLoading(false);
     }
   }

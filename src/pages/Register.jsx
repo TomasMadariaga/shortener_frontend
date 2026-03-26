@@ -25,17 +25,14 @@ export const Register = () => {
   }, []);
 
   return (
-    <div className="flex-grow flex items-center justify-center px-4 py-12 bg-bg">
+    <div className="grow flex items-center justify-center px-4 py-12 bg-bg">
       <div className="max-w-md w-full">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-text-h">Create an account</h1>
           <p className="text-text mt-2">Get started with URL shortener</p>
         </div>
 
-        {/* Card */}
         <div className="bg-card/30 border border-border rounded-xl p-6 sm:p-8 backdrop-blur-sm">
-          {/* Errores generales */}
           {registerErrors && registerErrors.length > 0 && (
             <div className="mb-6 space-y-2">
               {registerErrors.map((error, i) => (
@@ -49,7 +46,6 @@ export const Register = () => {
             </div>
           )}
 
-          {/* Formulario */}
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
               <label htmlFor="username" className="block text-text text-sm mb-2">
@@ -107,13 +103,12 @@ export const Register = () => {
 
             <button
               type="submit"
-              className="w-full py-2.5 bg-gradient-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-2.5 bg-linear-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
             >
               Create account
             </button>
           </form>
 
-          {/* Link a login */}
           <div className="mt-6 text-center">
             <p className="text-text text-sm">
               Already have an account?{" "}

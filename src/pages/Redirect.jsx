@@ -4,50 +4,37 @@ import { useParams } from "react-router-dom";
 import { formatUrl } from "../utils/formatUrl";
 
 export const Redirect = () => {
-  const { updateClick, getAUrl, redirectTo } = useUrl();
+  const { redirectTo } = useUrl();
   const { id } = useParams();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  // 🔥 Usar useRef para garantizar una sola ejecución
   const hasExecuted = useRef(false);
 
   useEffect(() => {
-    // Si ya se ejecutó, salir
     if (hasExecuted.current) return;
     hasExecuted.current = true;
 
     const redirect = async () => {
       try {
-        const urlData = await redirectTo(id);
-        console.log(urlData)
-
-        if (!urlData || !urlData.data) {
-          console.log('error')
+        const response = await redirectTo(id);
+        
+        if (!response || !response.data) {
           setError(true);
           setLoading(false);
           return;
         }
 
-        let originalUrl = urlData.data.data?.redirectUrl || urlData.data.redirectUrl;
+        const redirectUrl = response.data.redirectUrl;
 
-        if (!originalUrl) {
-
+        if (!redirectUrl) {
           setError(true);
           setLoading(false);
           return;
         }
 
-        const normalizedUrl = formatUrl(originalUrl);
-
-
-        // Actualizar clicks sin esperar
-        // updateClick(id, urlData.data).catch((err) => {
-        //   console.error("Error updating clicks:", err);
-        // });
-
-        // Redirigir
-      window.location.href = normalizedUrl;
+        const normalizedUrl = formatUrl(redirectUrl);
+        window.location.href = normalizedUrl;
+        
       } catch (err) {
         console.error("Redirect error:", err);
         setError(true);
@@ -56,7 +43,7 @@ export const Redirect = () => {
     };
 
     redirect();
-  }, []);
+  }, [id, redirectTo]);
 
   useEffect(() => {
     document.title = "Redirecting...";

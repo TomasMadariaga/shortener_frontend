@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useUrl } from "../context/UrlContext";
-import { FaGlobe, FaMobile, FaDesktop, FaChartLine, FaArrowLeft } from "react-icons/fa";
+import { FaGlobe, FaDesktop, FaChartLine, FaArrowLeft } from "react-icons/fa";
 import { StatCard } from "../components/StatCard";
 
-// Funciones helper para estadísticas
 const getTopCountries = (visits) => {
   const countries = {};
   visits.forEach(visit => {
@@ -109,7 +108,6 @@ export const UrlDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Header con botón volver */}
       <div className="mb-8">
         <Link
           to="/dashboard"
@@ -145,7 +143,6 @@ export const UrlDetails = () => {
         </div>
       </div>
 
-      {/* Estadísticas en grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <StatCard
           icon={<FaGlobe className="text-accent" />}
@@ -164,7 +161,8 @@ export const UrlDetails = () => {
         />
       </div>
 
-      {/* Tabla de visitas recientes */}
+      
+
       <div className="border border-border rounded-xl overflow-hidden">
         <div className="bg-card/50 px-6 py-4 border-b border-border">
           <h2 className="font-semibold text-text-h">Recent visits</h2>

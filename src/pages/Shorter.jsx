@@ -24,7 +24,6 @@ export const Shorter = () => {
 
   useEffect(() => {
     if (!customSlug || customSlug.length < 3) return;
-
     checkSlug(customSlug);
   }, [customSlug, checkSlug]);
 
@@ -107,143 +106,93 @@ export const Shorter = () => {
 
         <div className="relative rounded-2xl border border-border bg-card/40 backdrop-blur-sm p-6 shadow-xl">
           <form onSubmit={onSubmit} className="space-y-4">
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text/40">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m1.172-4.172l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                ref={inputRef}
+                {...register("url", {
+                  required: true,
+                  pattern: {
+                    value:
+                      /^(https?:\/\/(?:www\.)?|www\.|[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b)([-a-zA-Z0-9@:%_+.~#?&//=]*)$/,
+                    message: "The URL is invalid",
+                  },
+                })}
+                placeholder="https://example.com/very-long-url..."
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-bg/50 text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+              />
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1 relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text/40">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.102m1.172-4.172l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-                    />
-                  </svg>
+              <div className="relative flex-1">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text/40 text-sm pointer-events-none">
+                  {clientUrl.replace("https://", "").replace("http://", "")}/
                 </div>
                 <input
                   type="text"
-                  ref={inputRef}
-                  {...register("url", {
-                    required: true,
+                  {...register("customSlug", {
                     pattern: {
-                      value:
-                        /^(https?:\/\/(?:www\.)?|www\.|[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b)([-a-zA-Z0-9@:%_+.~#?&//=]*)$/,
-                      message: "The URL is invalid",
+                      value: /^[a-zA-Z0-9_-]{3,20}$/,
+                      message: "3-20 characters (letters, numbers, underscore, hyphen)",
                     },
                   })}
-                  placeholder="https://example.com/very-long-url..."
-                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-border bg-bg/50 text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
+                  placeholder="custom-slug (optional)"
+                  className="w-full pl-44 pr-4 py-3 rounded-xl border border-border bg-bg/50 text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
                 />
               </div>
+
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group px-6 py-3 bg-linear-to-r from-accent to-accent/80 text-white rounded-xl hover:opacity-90 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
+                className="px-6 py-3 bg-linear-to-r from-accent to-accent/80 text-white rounded-xl hover:opacity-90 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto w-full"
               >
-                <span className="relative z-10 flex items-center gap-2">
+                <span className="flex items-center justify-center gap-2">
                   {isLoading ? (
                     <>
-                      <svg
-                        className="animate-spin w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                       Shortening...
                     </>
                   ) : (
                     <>
                       Shorten URL
-                      <svg
-                        className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
-                        />
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                       </svg>
                     </>
                   )}
                 </span>
               </button>
             </div>
-            <div className="relative">
-              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text/40 text-sm pointer-events-none">
-                {clientUrl.replace("https://", "").replace("http://", "")}/
-              </div>
-              <input
-                type="text"
-                {...register("customSlug", {
-                  pattern: {
-                    value: /^[a-zA-Z0-9_-]{3,20}$/,
-                    message:
-                      "3-20 characters (letters, numbers, underscore, hyphen)",
-                  },
-                })}
-                placeholder="custom-slug (optional)"
-                className="w-full pl-44 pr-4 py-3 rounded-xl border border-border bg-bg/50 text-text placeholder:text-text/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all"
-              />
-            </div>
 
             {customSlug && customSlug.length >= 3 && (
               <div className="text-sm">
                 {checkingSlug ? (
                   <p className="text-text/50 flex items-center gap-1">
+                    <svg className="animate-spin w-3 h-3" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
                     Checking availability...
                   </p>
                 ) : slugAvailable === true ? (
                   <p className="text-green-400 flex items-center gap-1">
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     Available!
                   </p>
                 ) : slugAvailable === false ? (
                   <p className="text-red-400 flex items-center gap-1">
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     Slug already taken
                   </p>
@@ -251,27 +200,15 @@ export const Shorter = () => {
               </div>
             )}
             {errors.customSlug && (
-              <p className="text-red-400 text-sm">
-                {errors.customSlug.message}
-              </p>
+              <p className="text-red-400 text-sm">{errors.customSlug.message}</p>
             )}
           </form>
 
           {URL && (
             <div className="mt-6 p-4 rounded-xl border border-accent/30 bg-accent-bg/30">
               <p className="text-text text-xs mb-2 flex items-center gap-1">
-                <svg
-                  className="w-3 h-3 text-accent"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg className="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 Your shortened URL:
               </p>
@@ -283,18 +220,8 @@ export const Shorter = () => {
                   rel="noopener noreferrer"
                 >
                   {`${clientUrl}/${URL}`}
-                  <svg
-                    className="w-3 h-3 opacity-0 group-hover:opacity-100 transition"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
+                  <svg className="w-3 h-3 opacity-0 group-hover:opacity-100 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </Link>
                 <button
@@ -307,18 +234,8 @@ export const Shorter = () => {
                   }}
                   className="px-4 py-1.5 text-sm border border-accent text-accent rounded-lg hover:bg-accent hover:text-white transition flex items-center gap-1 group"
                 >
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                   Copy
                 </button>
@@ -333,18 +250,8 @@ export const Shorter = () => {
                 className="text-sm text-accent hover:underline inline-flex items-center gap-1 group"
               >
                 View your links
-                <svg
-                  className="w-3 h-3 group-hover:translate-x-1 transition"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
+                <svg className="w-3 h-3 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
             </div>
