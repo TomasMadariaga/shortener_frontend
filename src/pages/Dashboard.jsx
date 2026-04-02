@@ -45,7 +45,7 @@ export const Dashboard = () => {
   );
 }
 
-  if (urls.length === 0) {
+  if (urls?.length === 0) {
     return (
       <div className="grow flex items-center justify-center bg-bg">
         <div className="text-center">
