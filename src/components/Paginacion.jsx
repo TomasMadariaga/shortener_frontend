@@ -31,8 +31,8 @@ export const Paginacion = ({ pagina, setPagina, maximo }) => {
 
   return (
     <div className="flex items-center justify-center gap-2 mt-8">
-      {/* Botón anterior */}
       <button
+      aria-label="Previous page"
         onClick={handlePrev}
         disabled={pagina === 1}
         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
@@ -46,10 +46,10 @@ export const Paginacion = ({ pagina, setPagina, maximo }) => {
         </svg>
       </button>
 
-      {/* Números de página */}
       <div className="flex items-center gap-1">
         {getPageNumbers().map((page, idx) => (
           <button
+          aria-label={`Go to page ${page}`}
             key={idx}
             onClick={() => typeof page === "number" && goToPage(page)}
             disabled={page === "..."}
@@ -67,6 +67,7 @@ export const Paginacion = ({ pagina, setPagina, maximo }) => {
       </div>
 
       <button
+      aria-label="Next page"
         onClick={handleNext}
         disabled={pagina === maximo}
         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${

@@ -56,6 +56,7 @@ export const UrlCard = ({ link, index, urls, setUrls }) => {
                 <span className="hidden md:inline">{`${clientUrl}/${link.shortUrl}`}</span>
               </Link>
               <button
+              aria-label="URL"
                 onClick={() => {
                   navigator.clipboard.writeText(
                     `${clientUrl}/${link.shortUrl}`,
@@ -89,6 +90,7 @@ export const UrlCard = ({ link, index, urls, setUrls }) => {
             <p className="text-text text-xs">clicks</p>
           </div>
           <button
+          aria-label="Delete url"
             onClick={() => handleDelete(link.id, link.url)}
             className="p-2 text-text/40 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition"
             title="Delete"

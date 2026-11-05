@@ -102,6 +102,7 @@ export const Register = () => {
             </div>
 
             <button
+            aria-label="Create account"
               type="submit"
               className="w-full py-2.5 bg-linear-to-r from-accent to-accent/80 text-white rounded-lg font-medium hover:opacity-90 transition disabled:opacity-50"
             >

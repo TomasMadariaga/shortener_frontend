@@ -147,6 +147,7 @@ export const Shorter = () => {
               </div>
 
               <button
+              aria-label="Generate URL"
                 type="submit"
                 disabled={isLoading}
                 className="px-6 py-3 bg-linear-to-r from-accent to-accent/80 text-white rounded-xl hover:opacity-90 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto w-full"
@@ -225,6 +226,7 @@ export const Shorter = () => {
                   </svg>
                 </Link>
                 <button
+                aria-label="Copy URL"
                   onClick={() => {
                     navigator.clipboard.writeText(`${clientUrl}/${URL}`);
                     toast.success("Copied to clipboard!", {
